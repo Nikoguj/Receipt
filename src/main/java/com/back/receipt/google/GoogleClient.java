@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.annotation.Resource;
 import javax.json.Json;
 import javax.json.JsonObject;
 import java.net.URI;
@@ -16,7 +17,7 @@ import java.net.URI;
 @Component
 public class GoogleClient {
 
-    @Autowired
+    @Resource
     private GoogleConfig googleConfig;
 
     @Autowired
