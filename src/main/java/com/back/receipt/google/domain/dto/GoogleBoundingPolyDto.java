@@ -14,4 +14,5 @@ public class GoogleBoundingPolyDto {
 
     @JsonProperty("vertices")
     private List<GoogleVertexDto> vertices = null;
+    
 }
