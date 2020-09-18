@@ -14,5 +14,4 @@ public class GoogleResponseDto {
 
     @JsonProperty("responses")
     private List<GoogleResponsesDto> googleResponsesDtoList;
-
 }

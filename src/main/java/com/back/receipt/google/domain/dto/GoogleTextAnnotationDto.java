@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,5 +16,4 @@ public class GoogleTextAnnotationDto {
     private String description;
     @JsonProperty("boundingPoly")
     private GoogleBoundingPolyDto boundingPoly;
-
 }

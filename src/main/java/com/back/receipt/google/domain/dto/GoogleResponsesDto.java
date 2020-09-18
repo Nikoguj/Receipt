@@ -14,5 +14,4 @@ public class GoogleResponsesDto {
 
     @JsonProperty("textAnnotations")
     private List<GoogleTextAnnotationDto> textAnnotations = null;
-
 }
