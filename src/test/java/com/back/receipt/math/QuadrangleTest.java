@@ -1,10 +1,7 @@
 package com.back.receipt.math;
 
 
-import com.back.receipt.google.domain.GoogleBoundingPoly;
-import com.back.receipt.google.domain.GoogleResponse;
-import com.back.receipt.google.domain.GoogleResponses;
-import com.back.receipt.google.domain.GoogleVertex;
+import com.back.receipt.google.domain.*;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +21,24 @@ public class QuadrangleTest {
                 new LinearFunction(90, -350)
         ));
 
-        Quadrangle quadrangle = new Quadrangle(linearFunctionList, 20, 20);
+        GoogleResponse googleResponse = new GoogleResponse();
+        GoogleResponses googleResponses = new GoogleResponses();
+
+        GoogleBoundingPoly googleBoundingPoly = new GoogleBoundingPoly();
+        GoogleVertex googleVertex1 = new GoogleVertex(0 , 1);
+        GoogleVertex googleVertex2 = new GoogleVertex(3 , 20);
+        GoogleVertex googleVertex3 = new GoogleVertex(1 , 19);
+        GoogleVertex googleVertex4 = new GoogleVertex(20 , 20);
+        googleBoundingPoly.getVertices().add(googleVertex1);
+        googleBoundingPoly.getVertices().add(googleVertex2);
+        googleBoundingPoly.getVertices().add(googleVertex3);
+        googleBoundingPoly.getVertices().add(googleVertex4);
+
+        GoogleTextAnnotation googleTextAnnotation = new GoogleTextAnnotation("pl", "dis", googleBoundingPoly);
+        googleResponses.getTextAnnotations().add(googleTextAnnotation);
+        googleResponse.getGoogleResponsesList().add(googleResponses);
+
+        Quadrangle quadrangle = new Quadrangle(linearFunctionList, googleResponse);
 
         //When
         quadrangle.calculatePointsBoundingPoly();

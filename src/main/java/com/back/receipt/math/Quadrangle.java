@@ -1,6 +1,7 @@
 package com.back.receipt.math;
 
 import com.back.receipt.google.domain.GoogleBoundingPoly;
+import com.back.receipt.google.domain.GoogleResponse;
 import com.back.receipt.google.domain.GoogleVertex;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,10 @@ public class Quadrangle {
     private int maxY;
     private GoogleBoundingPoly googleBoundingPoly;
 
-    public Quadrangle(List<LinearFunction> linearFunctionList, int maxX, int maxY) {
+    public Quadrangle(List<LinearFunction> linearFunctionList, GoogleResponse googleResponse) {
         this.linearFunctionList = linearFunctionList;
-        this.maxX = maxX;
-        this.maxY = maxY;
+        this.maxX = maxX(googleResponse);
+        this.maxY = maxY(googleResponse);
         googleBoundingPoly = new GoogleBoundingPoly();
 
     }
@@ -39,6 +40,49 @@ public class Quadrangle {
                 }
             }
         }
+    }
+
+    public void sortGoogleBoundingPoly() {
+        List<GoogleVertex> googleVertexList = new ArrayList<>();
+        GoogleVertex first = findFirst();
+        googleVertexList.add(first);
+        googleBoundingPoly.getVertices().remove(first);
+
+        GoogleVertex second = findSecond(first);
+        googleVertexList.add(second);
+        googleBoundingPoly.getVertices().remove(second);
+
+        GoogleVertex fourth = findFourth(first);
+        googleBoundingPoly.getVertices().remove(fourth);
+
+        googleVertexList.add(googleBoundingPoly.getVertices().get(0));
+        googleVertexList.add(fourth);
+
+        googleBoundingPoly.getVertices().clear();
+        googleBoundingPoly.getVertices().addAll(googleVertexList);
+
+    }
+
+    private int maxX(GoogleResponse googleResponse) {
+        int max = 0;
+        for (int i = 0; i < 4; i++) {
+            int actual = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getX();
+            if(actual >= max) {
+                max = actual;
+            }
+        }
+        return max;
+    }
+
+    private int maxY(GoogleResponse googleResponse) {
+        int max = 0;
+        for (int i = 0; i < 4; i++) {
+            int actual = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getY();
+            if(actual >= max) {
+                max = actual;
+            }
+        }
+        return max;
     }
 
     private boolean isInsideList(GoogleVertex googleVertex){
@@ -61,27 +105,6 @@ public class Quadrangle {
 
         GoogleVertex point = new GoogleVertex((int) Math.round(x), (int) Math.round(y));
         return Optional.of(point);
-    }
-
-    public void sortGoogleBoundingPoly() {
-        List<GoogleVertex> googleVertexList = new ArrayList<>();
-        GoogleVertex first = findFirst();
-        googleVertexList.add(first);
-        googleBoundingPoly.getVertices().remove(first);
-
-        GoogleVertex second = findSecond(first);
-        googleVertexList.add(second);
-        googleBoundingPoly.getVertices().remove(second);
-
-        GoogleVertex fourth = findFourth(first);
-        googleBoundingPoly.getVertices().remove(fourth);
-
-        googleVertexList.add(googleBoundingPoly.getVertices().get(0));
-        googleVertexList.add(fourth);
-
-        googleBoundingPoly.getVertices().clear();
-        googleBoundingPoly.getVertices().addAll(googleVertexList);
-
     }
 
     private GoogleVertex findFirst() {
