@@ -14,7 +14,7 @@ public class LinearFunction {
     private double a;
     private double b;
 
-    public void calculateAB(GoogleVertex googleVertex1, GoogleVertex googleVertex2) {
+    public void calculateAB(final GoogleVertex googleVertex1, final GoogleVertex googleVertex2) {
         if((googleVertex2.getX()-googleVertex1.getX()) != 0) {
             a = ((double)googleVertex2.getY()-(double)googleVertex1.getY())/((double)googleVertex2.getX()-(double)googleVertex1.getX());
         } else {

@@ -19,7 +19,7 @@ public class Quadrangle {
     private int maxY;
     private GoogleBoundingPoly googleBoundingPoly;
 
-    public Quadrangle(List<LinearFunction> linearFunctionList, GoogleResponse googleResponse) {
+    public Quadrangle(final List<LinearFunction> linearFunctionList, final GoogleResponse googleResponse) {
         this.linearFunctionList = linearFunctionList;
         this.maxX = maxX(googleResponse);
         this.maxY = maxY(googleResponse);
@@ -63,7 +63,7 @@ public class Quadrangle {
 
     }
 
-    private int maxX(GoogleResponse googleResponse) {
+    private int maxX(final GoogleResponse googleResponse) {
         int max = 0;
         for (int i = 0; i < 4; i++) {
             int actual = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getX();
@@ -74,7 +74,7 @@ public class Quadrangle {
         return max;
     }
 
-    private int maxY(GoogleResponse googleResponse) {
+    private int maxY(final GoogleResponse googleResponse) {
         int max = 0;
         for (int i = 0; i < 4; i++) {
             int actual = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getY();
@@ -85,7 +85,7 @@ public class Quadrangle {
         return max;
     }
 
-    private boolean isInsideList(GoogleVertex googleVertex){
+    private boolean isInsideList(final GoogleVertex googleVertex){
         for (int i = 0; i < googleBoundingPoly.getVertices().size(); i++) {
             if(googleVertex.equals(googleBoundingPoly.getVertices().get(i))) {
                 return true;
@@ -94,7 +94,7 @@ public class Quadrangle {
         return false;
     }
 
-    private Optional<GoogleVertex> calculateIntersectionPoint(LinearFunction linearFunction1, LinearFunction linearFunction2) {
+    private Optional<GoogleVertex> calculateIntersectionPoint(final LinearFunction linearFunction1, final LinearFunction linearFunction2) {
 
         if (linearFunction1.getA() == linearFunction2.getA()) {
             return Optional.empty();
@@ -120,7 +120,7 @@ public class Quadrangle {
         return returnGoogleVertex;
     }
 
-    private GoogleVertex findFourth(GoogleVertex firstGoogleVertex) {
+    private GoogleVertex findFourth(final GoogleVertex firstGoogleVertex) {
         GoogleVertex closerGoogleVertex = new GoogleVertex();
         int x = 0;
         for(GoogleVertex googleVertex: googleBoundingPoly.getVertices()) {
@@ -133,7 +133,7 @@ public class Quadrangle {
         return closerGoogleVertex;
     }
 
-    private GoogleVertex findSecond(GoogleVertex firstGoogleVertex) {
+    private GoogleVertex findSecond(final GoogleVertex firstGoogleVertex) {
         GoogleVertex closerGoogleVertex = new GoogleVertex();
         int y = 0;
         for(GoogleVertex googleVertex: googleBoundingPoly.getVertices()) {
@@ -146,7 +146,7 @@ public class Quadrangle {
         return closerGoogleVertex;
     }
 
-    private double getD(GoogleVertex googleVertex) {
+    private double getD(final GoogleVertex googleVertex) {
         return Math.sqrt(googleVertex.getX()*googleVertex.getX() + googleVertex.getY()*googleVertex.getY());
     }
 
