@@ -6,6 +6,7 @@ import com.back.receipt.google.GoogleClient;
 import com.back.receipt.google.domain.GoogleResponse;
 import com.back.receipt.google.mapper.GoogleMapper;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,12 @@ public class BiedronkaProductExtractorTest {
     @Autowired
     private ImageConverter imageConverter;
 
-    private static String exampleImagePath = "exampleImage/paragBiedro.jpeg";
+    String exampleImagePath;
+
+    @BeforeEach
+    public void initialize() {
+        exampleImagePath = "exampleImage/paragBiedro.jpeg";
+    }
 
     @Test
         public void extract() throws IOException {
@@ -67,6 +73,8 @@ public class BiedronkaProductExtractorTest {
 
         //When
         List<Product> returnProductList = biedronkaProductExtractor.extract(googleResponse);
+
+        System.out.println(returnProductList);
 
         //Then
         Assert.assertEquals(exceptedProductList.size(), returnProductList.size());
