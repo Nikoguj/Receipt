@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class Liner {
 
-    public static List<GoogleTextAnnotation> googleLinerWords(GoogleResponses myGoogleResponses, GoogleResponse googleResponse) {
+    public static List<GoogleTextAnnotation> googleLinerWords(final GoogleResponses myGoogleResponses, final GoogleResponse googleResponse) {
 
         String fullText = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getDescription();
         fullText = clearFullText(fullText);
