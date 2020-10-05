@@ -15,6 +15,6 @@ import java.util.List;
 @EqualsAndHashCode
 public class GoogleResponse {
 
-    private List<GoogleResponses> googleResponsesDtoList = new ArrayList<>();
+    private List<GoogleResponses> googleResponsesList = new ArrayList<>();
 
 }
