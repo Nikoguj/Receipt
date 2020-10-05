@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,5 +14,5 @@ import java.util.List;
 public class GoogleResponseDto {
 
     @JsonProperty("responses")
-    private List<GoogleResponsesDto> googleResponsesDtoList;
+    private List<GoogleResponsesDto> googleResponsesDtoList = new ArrayList<>();
 }

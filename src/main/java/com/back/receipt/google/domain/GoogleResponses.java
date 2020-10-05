@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,5 +15,5 @@ import java.util.List;
 @EqualsAndHashCode
 public class GoogleResponses {
 
-    private List<GoogleTextAnnotation> textAnnotations = null;
+    private List<GoogleTextAnnotation> textAnnotations = new ArrayList<>();
 }

@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,6 +14,6 @@ import java.util.List;
 @EqualsAndHashCode
 public class GoogleBoundingPoly {
 
-    private List<GoogleVertex> vertices = null;
+    private List<GoogleVertex> vertices = new ArrayList<>();
 
 }
