@@ -1,6 +1,7 @@
 package com.back.receipt.biedronka;
 
-import com.back.receipt.converter.ImageConverter;
+import com.back.receipt.exception.MyResourceNotFoundException;
+import com.back.receipt.image.ImageConverter;
 import com.back.receipt.domain.Product;
 import com.back.receipt.google.GoogleClient;
 import com.back.receipt.google.domain.GoogleResponse;
@@ -14,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,11 +46,12 @@ public class BiedronkaProductExtractorTest {
     }
 
     @Test
-        public void extract() throws IOException {
+        public void extract() throws IOException, MyResourceNotFoundException {
         //Given
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(exampleImagePath).getFile());
-        GoogleResponse googleResponse = googleMapper.mapToGoogleResponse(googleClient.getGoogleDto(imageConverter.encodeToString(file)));
+        InputStream inputStream = new FileInputStream(file);
+        GoogleResponse googleResponse = googleMapper.mapToGoogleResponse(googleClient.getGoogleDto(imageConverter.encodeToString(inputStream)));
 
         Product product1 = new Product("Jaja kl M x10szt C", 3.0, 3.99, 0, 0, 11.97);
         Product product2 = new Product("Cukier Biały 1kg B", 1.0, 2.49, 0, 0, 2.49);

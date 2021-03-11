@@ -14,4 +14,7 @@ public class WordsContainer {
     public static String sprzedaz = "SPRZEDAZ";
     public static String rabat = "Rabat";
     public static String sprzedaz_opodatkowana = "SPRZEDAZ OPODATKOWANA";
+    public static String sklep = "Sklep";
+    public static String nip = "NIP";
+    public static String pln = "PLN";
 }

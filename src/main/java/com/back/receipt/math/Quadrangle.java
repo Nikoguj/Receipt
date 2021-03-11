@@ -66,7 +66,14 @@ public class Quadrangle {
     private int maxX(final GoogleResponse googleResponse) {
         int max = 0;
         for (int i = 0; i < 4; i++) {
-            int actual = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getX();
+            Integer x = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getX();
+            int actual = 0;
+            if(x == null) {
+                actual = 0;
+            } else {
+                actual = x;
+            }
+
             if(actual >= max) {
                 max = actual;
             }
@@ -77,7 +84,13 @@ public class Quadrangle {
     private int maxY(final GoogleResponse googleResponse) {
         int max = 0;
         for (int i = 0; i < 4; i++) {
-            int actual = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getY();
+            Integer y = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().get(0).getBoundingPoly().getVertices().get(i).getY();
+            int actual = 0;
+            if(y == null) {
+                actual = 0;
+            } else {
+                actual = y;
+            }
             if(actual >= max) {
                 max = actual;
             }

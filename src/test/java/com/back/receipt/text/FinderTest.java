@@ -1,5 +1,6 @@
 package com.back.receipt.text;
 
+import com.back.receipt.exception.MyResourceNotFoundException;
 import com.back.receipt.google.domain.*;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ public class FinderTest {
     private Finder finder;
 
     @Test
-    public void getBoundingPolyWord() {
+    public void getBoundingPolyWord() throws MyResourceNotFoundException {
         //Given
         GoogleResponse googleResponse = new GoogleResponse();
         GoogleResponses googleResponses = new GoogleResponses();

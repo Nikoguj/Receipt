@@ -2,6 +2,7 @@ package com.back.receipt.text;
 
 import com.back.receipt.google.domain.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +20,25 @@ public class Liner {
 
         for (int i = 0; i < myGoogleResponses.getTextAnnotations().size(); i++) {
             String currentDescription = myGoogleResponses.getTextAnnotations().get(i).getDescription();
-            if (currentDescription.length() > 3) {
+            if(currentDescription.equals("Rabat")) {
+                GoogleTextAnnotation googleTextAnnotation = new GoogleTextAnnotation();
+                googleTextAnnotation.setDescription("Rabat");
+                googleTextAnnotationList.add(googleTextAnnotation);
+            } else if (currentDescription.length() > 3 && StringUtils.countOccurrencesOf(fullText, currentDescription) == 1) {
                 int indexS = fullText.indexOf(currentDescription);
-                addName(fullText, googleTextAnnotationList, indexS);
+                addLine(fullText, googleTextAnnotationList, indexS);
             } else {
                 try {
                     currentDescription = myGoogleResponses.getTextAnnotations().get(i).getDescription() + " " + myGoogleResponses.getTextAnnotations().get(i + 1).getDescription();
                     int indexS = fullText.indexOf(currentDescription);
-                    if(indexS != -1) {
-                        addName(fullText, googleTextAnnotationList, indexS);
+                    if (indexS != -1) {
+                        addLine(fullText, googleTextAnnotationList, indexS);
                     }
                 } catch (Exception e) {
                     currentDescription = myGoogleResponses.getTextAnnotations().get(i).getDescription();
                     int indexS = fullText.indexOf(currentDescription);
-                    if(indexS != -1) {
-                        addName(fullText, googleTextAnnotationList, indexS);
+                    if (indexS != -1) {
+                        addLine(fullText, googleTextAnnotationList, indexS);
                     }
                 }
             }
@@ -43,7 +48,7 @@ public class Liner {
         return googleTextAnnotationList;
     }
 
-    private static void addName(String fullText, List<GoogleTextAnnotation> googleTextAnnotationList, int indexS) {
+    private static void addLine(String fullText, List<GoogleTextAnnotation> googleTextAnnotationList, int indexS) {
         StringBuilder currentS = new StringBuilder();
         if (fullText.charAt(indexS - 1) == '\n') {
 

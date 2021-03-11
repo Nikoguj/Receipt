@@ -1,5 +1,6 @@
 package com.back.receipt.text;
 
+import com.back.receipt.exception.MyResourceNotFoundException;
 import com.back.receipt.google.domain.*;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,15 +11,16 @@ import java.util.Optional;
 @Component
 public class Finder extends Exception {
 
-    public GoogleBoundingPoly getBoundingPolyWord(final GoogleResponse googleResponse, final String word) {
+    public GoogleBoundingPoly getBoundingPolyWord(final GoogleResponse googleResponse, final String word) throws MyResourceNotFoundException {
         Optional<GoogleTextAnnotation> googleTextAnnotation = googleResponse.getGoogleResponsesList().get(0).getTextAnnotations().stream()
                 .filter(googleTextAnnotation1 -> googleTextAnnotation1.getDescription().equals(word))
                 .findFirst();
 
+        googleTextAnnotation.orElseThrow(() -> new MyResourceNotFoundException("Word \"" + word + "\" not found"));
         return googleTextAnnotation.get().getBoundingPoly();
     }
 
-    public GoogleBoundingPoly getBoundingPolyWords(final GoogleResponse googleResponse, final String words, final int wordsCount) {
+    public GoogleBoundingPoly getBoundingPolyWords(final GoogleResponse googleResponse, final String words, final int wordsCount) throws MyResourceNotFoundException {
         GoogleResponses googleResponses = googleResponse.getGoogleResponsesList().get(0);
 
         for (int i = 0; i < googleResponses.getTextAnnotations().size(); i++) {
@@ -61,7 +63,7 @@ public class Finder extends Exception {
                 }
             }
         }
-        return null;
+        throw new MyResourceNotFoundException("Word \"" + words + "\" not found");
     }
 
 }

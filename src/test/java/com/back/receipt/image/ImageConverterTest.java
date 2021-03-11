@@ -1,6 +1,5 @@
-package com.back.receipt.converter;
+package com.back.receipt.image;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -8,16 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.imageio.ImageIO;
-
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,9 +27,10 @@ public class ImageConverterTest {
         //Given
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(exampleImagePath).getFile());
+        InputStream inputStream = new FileInputStream(file);
 
         //When
-        String returnBase64 = imageConverter.encodeToString(file);
+        String returnBase64 = imageConverter.encodeToString(inputStream);
 
         //Then
         Assert.assertEquals(imageBase64, returnBase64);

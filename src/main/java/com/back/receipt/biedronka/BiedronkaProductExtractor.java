@@ -1,6 +1,7 @@
 package com.back.receipt.biedronka;
 
 import com.back.receipt.domain.Product;
+import com.back.receipt.exception.MyResourceNotFoundException;
 import com.back.receipt.google.domain.*;
 import com.back.receipt.math.LinearFunction;
 import com.back.receipt.math.Quadrangle;
@@ -20,7 +21,7 @@ public class BiedronkaProductExtractor {
     @Autowired
     private Finder finder;
 
-    public List<Product> extract(final GoogleResponse googleResponse) {
+    public List<Product> extract(final GoogleResponse googleResponse) throws MyResourceNotFoundException {
 
         GoogleResponses productGoogleResponses = extractProductName(googleResponse);
 
@@ -30,61 +31,67 @@ public class BiedronkaProductExtractor {
 
         List<GoogleTextAnnotation> googleTextAnnotationPrices = Liner.googleLinerWords(productGoogleResponses2, googleResponse);
 
+            List<Product> productList = new ArrayList<>();
 
-        List<Product> productList = new ArrayList<>();
-
-        int iPrices = 0;
-        for (int i = 0; i < googleTextAnnotationProducts.size(); i++) {
-            String productName = googleTextAnnotationProducts.get(i).getDescription();
-            Product product = new Product(productName);
-            String s1 = googleTextAnnotationPrices.get(iPrices).getDescription();
-            if (i + 1 < googleTextAnnotationProducts.size() && googleTextAnnotationProducts.get(i + 1).getDescription().equals(rabat)) {
-                String s2 = googleTextAnnotationPrices.get(iPrices + 1).getDescription();
-                String s3 = googleTextAnnotationPrices.get(iPrices + 2).getDescription();
-
-                List<Double> doubleList = TextPrice.dividerPrice(s1);
-                double d1 = doubleList.get(0);
-                double d2 = doubleList.get(1);
-                double d3 = doubleList.get(2);
-
-                s2 = s2.replaceAll("-", "");
-                s2 = s2.replaceAll(",", ".");
-                double d4 = Double.parseDouble(s2);
-
-                s3 = s3.substring(0, s3.length() - 1);
-                s3 = s3.replaceAll(",", ".");
-                double d5 = Double.parseDouble(s3);
-
-                product.setQuantity(d1);
-                product.setPriceForOne(d2);
-                product.setPriceWithoutDiscount(d3);
-                product.setDiscount(d4);
-                product.setPrice(d5);
-
-                i++;
-                iPrices = iPrices + 2;
-            } else {
-                List<Double> doubleList = TextPrice.dividerPrice(s1);
-                double d1 = doubleList.get(0);
-                double d2 = doubleList.get(1);
-                double d3 = doubleList.get(2);
-
-                product.setQuantity(d1);
-                product.setPriceForOne(d2);
-                product.setPrice(d3);
-            }
-            productList.add(product);
-            iPrices++;
-        }
+        setPriceForProduct(googleTextAnnotationProducts, googleTextAnnotationPrices, productList);
 
         return productList;
     }
 
+    private void setPriceForProduct(List<GoogleTextAnnotation> googleTextAnnotationProducts, List<GoogleTextAnnotation> googleTextAnnotationPrices, List<Product> productList) throws MyResourceNotFoundException {
+        try {
+            int iPrices = 0;
+            for (int i = 0; i < googleTextAnnotationProducts.size(); i++) {
+                String productName = googleTextAnnotationProducts.get(i).getDescription();
+                Product product = new Product(productName);
+                String s1 = googleTextAnnotationPrices.get(iPrices).getDescription();
+                if (i + 1 < googleTextAnnotationProducts.size() && googleTextAnnotationProducts.get(i + 1).getDescription().equals(rabat)) {
+                    String s2 = googleTextAnnotationPrices.get(iPrices + 1).getDescription();
+                    String s3 = googleTextAnnotationPrices.get(iPrices + 2).getDescription();
 
+                    List<Double> doubleList = TextPrice.dividerPrice(s1);
+                    double d1 = doubleList.get(0);
+                    double d2 = doubleList.get(1);
+                    double d3 = doubleList.get(2);
 
-    private GoogleResponses extractProductPrice(final GoogleResponse googleResponse) {
+                    s2 = s2.replaceAll("-", "");
+                    s2 = s2.replaceAll(",", ".");
+                    double d4 = Double.parseDouble(s2);
+
+                    s3 = s3.substring(0, s3.length() - 1);
+                    s3 = s3.replaceAll(",", ".");
+                    double d5 = Double.parseDouble(s3);
+
+                    product.setQuantity(d1);
+                    product.setPriceForOne(d2);
+                    product.setPriceWithoutDiscount(d3);
+                    product.setDiscount(d4);
+                    product.setPrice(d5);
+
+                    i++;
+                    iPrices = iPrices + 2;
+                } else {
+                    List<Double> doubleList = TextPrice.dividerPrice(s1);
+                    double d1 = doubleList.get(0);
+                    double d2 = doubleList.get(1);
+                    double d3 = doubleList.get(2);
+
+                    product.setQuantity(d1);
+                    product.setPriceForOne(d2);
+                    product.setPrice(d3);
+                }
+                productList.add(product);
+                iPrices++;
+            }
+        } catch (Exception e) {
+            throw new MyResourceNotFoundException("Can't find prices");
+        }
+    }
+
+    private GoogleResponses extractProductPrice(final GoogleResponse googleResponse) throws MyResourceNotFoundException {
         GoogleBoundingPoly receiptBoundingPoly = finder.getBoundingPolyWord(googleResponse, paragon);
         GoogleBoundingPoly soldABoundingPoly = finder.getBoundingPolyWords(googleResponse, sprzedaz_opodatkowana, 2);
+        soldABoundingPoly.getVertices().get(1).setY(soldABoundingPoly.getVertices().get(1).getY()-3);
         GoogleBoundingPoly fiscalBoundingPoly = finder.getBoundingPolyWord(googleResponse, fiskalny);
 
         LinearFunction linearFunction1 = new LinearFunction();
@@ -114,7 +121,7 @@ public class BiedronkaProductExtractor {
         return productGoogleResponses;
     }
 
-    private GoogleResponses extractProductName(final GoogleResponse googleResponse) {
+    private GoogleResponses extractProductName(final GoogleResponse googleResponse) throws MyResourceNotFoundException {
         GoogleBoundingPoly receiptBoundingPoly = finder.getBoundingPolyWord(googleResponse, paragon);
         GoogleBoundingPoly soldABoundingPoly = finder.getBoundingPolyWords(googleResponse, sprzedaz_opodatkowana, 2);
 

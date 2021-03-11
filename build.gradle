@@ -1,16 +1,33 @@
 plugins {
-    id 'org.springframework.boot' version '2.3.3.RELEASE'
+
+    id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+    id "com.vaadin" version "0.14.3.7"
+    id 'war'
 }
 
 group = 'com.back.receipt'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 repositories {
     mavenCentral()
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
 }
+
+ext {
+    set('vaadinVersion', "14.4.2")
+}
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -28,10 +45,34 @@ dependencies {
 
     compile 'org.junit.jupiter:junit-jupiter:5.6.2'
     compile 'org.junit.vintage:junit-vintage-engine:5.6.2'
+
+    compile 'mysql:mysql-connector-java:8.0.21'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.3.4.RELEASE'
+    compile 'org.hibernate:hibernate-validator:7.0.0.Alpha6'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    implementation 'com.vaadin:vaadin-spring-boot-starter'
+
+    compile group: 'com.google.cloud.sql', name: 'mysql-socket-factory', version: '1.1.0'
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+    }
 }
 
 test {
     useJUnitPlatform {
         includeEngines 'junit-jupiter'
     }
+}
+
+vaadin {
+    pnpmEnable = true
+    productionMode = true
 }
